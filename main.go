@@ -47,7 +47,7 @@ func (h *countHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/users/", userHandlerFunc)
+	http.HandleFunc("/users/", userHandlerFunc) //allows /users/deadpool etc
 	http.Handle("/count", new(countHandler))
 	log.Fatal(http.ListenAndServe(port, nil))
 }
