@@ -1,32 +1,15 @@
 package newsfeed
-//Getter interface to program against
-type Getter interface {
-	GetAll() []Item
+//Getter gets news items
+	Add(ite Item)
 }
-//Adder Interface to program against
-type Adder interface {
-	Add(item Item)
-}
-//Item is for our News items
-type Item struct {
-	Title string `json:"title"`
+//Item struct for news items
 	Post  string `json:"post"`
-}
-//Repo for holding news items
-type Repo struct {
-	Items []Item
-}
-//New Repo (empty) of news items
+t}
+//Create new Repo
 func New() *Repo {
 	return &Repo{
-		Items: []Item{},
-	}
-}
-//Add impl
+//Add items to a repo
 func (r *Repo) Add(item Item) {
 	r.Items = append(r.Items, item)
-}
-//GetAll impl
-func (r *Repo) GetAll() []Item {
 	return r.Items
-}
+}	

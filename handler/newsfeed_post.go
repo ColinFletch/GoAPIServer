@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-//NewsFeedPost Comment
+//NewsfeedPost Comment
 /* Post to newsfeed in a browser console simply by using:
 await fetch('/news', {
 	method: 'POST',
@@ -17,7 +17,7 @@ await fetch('/news', {
 			})
 })
 */
-func NewsFeedPost(feed *newsfeed.Repo) http.HandlerFunc {
+func NewsfeedPost(feed newsfeed.Adder) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		request := map[string]string{}
 		json.NewDecoder(r.Body).Decode(&request)
