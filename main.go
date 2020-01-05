@@ -5,15 +5,19 @@ import (
 	"log"
 	"net/http"
 	"sync"
+
+	"github.com/colinfletch/GoAPIServer/handler"
+	"github.com/colinfletch/goapiserver/platform/newsfeed"
+
+	"github.com/go-chi/chi"
 )
 
 const (
-	port        = ":8080"
+	port        = ":3000"
 	userAPIResp = `
-<p> Hello, World! 
-<p> Request received : %q endpoint
-<p> HTTP Method : %v
-<p> This is call %v to this API
+ Request received : %q endpoint
+ HTTP Method : %v
+ This is call %v to this API
 `
 	countAPIResp = `
 <p> Hello, World! 
@@ -49,5 +53,19 @@ func (h *countHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/users/", userHandlerFunc) //allows /users/deadpool etc
 	http.Handle("/count", new(countHandler))
-	log.Fatal(http.ListenAndServe(port, nil))
+
+	feed := newsfeed.New()
+	feed.Add(newsfeed.Item{
+		Title: "Something New!",
+		Post:  "This is a new article post...",
+	})
+	r := chi.NewRouter()
+
+	//Get newsfeed
+	r.Get("/news", handler.NewsFeedGet(feed))
+
+	r.Post("/news", handler.NewsFeedPost(feed))
+
+	fmt.Println("Serving on port ", port)
+	log.Fatal(http.ListenAndServe(port, r))
 }
