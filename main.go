@@ -76,7 +76,7 @@ func main() {
 			Title: request["title"],
 			Post:  request["post"],
 		})
-
+		w.WriteHeader(201)
 		w.Write([]byte("Well Done!"))
 	})
 
