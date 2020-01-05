@@ -1,14 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"sync"
 
-	"github.com/colinfletch/GoAPIServer/handler"
 	"github.com/colinfletch/goapiserver/platform/newsfeed"
-
 	"github.com/go-chi/chi"
 )
 
@@ -59,12 +58,27 @@ func main() {
 		Title: "Something New!",
 		Post:  "This is a new article post...",
 	})
+
 	r := chi.NewRouter()
 
-	//Get newsfeed
-	r.Get("/news", handler.NewsFeedGet(feed))
+	//Get news
+	r.Get("/news", func(w http.ResponseWriter, r *http.Request) {
+		items := feed.GetAll()
+		json.NewEncoder(w).Encode(items)
+	})
 
-	r.Post("/news", handler.NewsFeedPost(feed))
+	//Post news
+	r.Post("/news", func(w http.ResponseWriter, r *http.Request) {
+		request := map[string]string{}
+		json.NewDecoder(r.Body).Decode(&request)
+
+		feed.Add(newsfeed.Item{
+			Title: request["title"],
+			Post:  request["post"],
+		})
+
+		w.Write([]byte("Well Done!"))
+	})
 
 	fmt.Println("Serving on port ", port)
 	log.Fatal(http.ListenAndServe(port, r))

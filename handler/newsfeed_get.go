@@ -7,7 +7,7 @@ import (
 )
 
 // NewsFeedGet Comment
-func NewsFeedGet(feed *newsfeed.Repo) http.HandlerFunc {
+func NewsFeedGet(feed newsfeed.Repo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		items := feed.GetAll()
 		json.NewEncoder(w).Encode(items)
